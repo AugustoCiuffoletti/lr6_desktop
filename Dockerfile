@@ -14,7 +14,7 @@ RUN apt-get install -y sudo
 RUN apt-get install -y autocutsel     # Serve a collegare le clipboard
 
 # rimozione app inutili
-RUN apt-get remove -y deluge-common lxmusic smplayer mpv pulseaudio pulseaudio-utils evince tcl tcl8.6 pavucontrol tilix
+RUN apt-get remove -y deluge-common lxmusic smplayer mpv pulseaudio pulseaudio-utils evince tcl tcl8.6 pavucontrol tilix firefox usermode xscreensaver
 RUN apt-get -y autoremove
 
 # Installazione package generazione e cattura di pacchetti
@@ -25,11 +25,15 @@ RUN apt-get --yes install netcat iproute2 net-tools dnsutils iputils-ping tracer
 RUN apt-get --yes install make git geany
 # Installazione strumenti ssh
 RUN apt-get --yes install openssh-client openssh-server
-# end added
 
+### Cleanup (moved)
+RUN apt-get autoclean -y \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/cache/apt/* /tmp/a.txt /tmp/b.txt
 
-ARG username=user
-ARG password=user
+ARG username="user"
+ARG password="user"
 
 RUN useradd \
 	--create-home \
@@ -41,15 +45,12 @@ RUN useradd \
 	
 RUN mv /usr/bin/lxpolkit /usr/bin/lxpolkit.ORIG	
 
-WORKDIR /root
-ENV HOME=/home/ubuntu \
-    SHELL=/bin/bash
-
 COPY entrypoint.sh /opt/
 COPY config/pcmanfm /home/$username/.config/pcmanfm
 COPY vnc/xstartup /home/$username/.vnc/
+COPY wallpaper.jpg /usr/share/lxde/wallpapers/
 
 RUN chown --recursive $username:$username /home/$username
 
-CMD ["/opt/entrypoint.sh"]
+CMD /opt/entrypoint.sh
 

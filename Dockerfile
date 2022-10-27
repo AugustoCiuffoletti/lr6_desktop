@@ -11,6 +11,7 @@ RUN apt-get install -y lxde
 RUN apt-get install -y tightvncserver
 RUN apt-get install -y novnc python3-websockify python3-numpy
 RUN apt-get install -y sudo
+RUN apt-get install -y autocutsel     # Serve a collegare le clipboard
 
 ARG username=user
 ARG password=user
@@ -28,9 +29,12 @@ RUN mv /usr/bin/lxpolkit /usr/bin/lxpolkit.ORIG
 WORKDIR /root
 ENV HOME=/home/ubuntu \
     SHELL=/bin/bash
-HEALTHCHECK --interval=30s --timeout=5s CMD curl --fail http://127.0.0.1:6079/api/health
 
 COPY entrypoint.sh /opt/
-ENTRYPOINT ["/opt/entrypoint.sh"]
+COPY config/pcmanfm /home/$username/.config/pcmanfm
+COPY vnc/xstartup /home/$username/.vnc/
 
-USER user
+RUN chown --recursive $username:$username /home/$username
+
+CMD ["/opt/entrypoint.sh"]
+

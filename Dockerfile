@@ -33,4 +33,4 @@ HEALTHCHECK --interval=30s --timeout=5s CMD curl --fail http://127.0.0.1:6079/ap
 COPY entrypoint.sh /opt/
 ENTRYPOINT ["/opt/entrypoint.sh"]
 
-
+USER user

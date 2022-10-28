@@ -43,7 +43,8 @@ RUN useradd \
 	--password "$(openssl passwd -1 $password)"\
 	$username
 	
-RUN mv /usr/bin/lxpolkit /usr/bin/lxpolkit.ORIG	
+RUN mv /usr/bin/lxpolkit /usr/bin/lxpolkit.ORIG
+RUN echo "desktop" > /etc/hostname
 
 COPY entrypoint.sh /opt/
 COPY config/pcmanfm /home/$username/.config/pcmanfm

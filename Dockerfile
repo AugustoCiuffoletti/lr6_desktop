@@ -25,6 +25,11 @@ RUN apt-get --yes install netcat iproute2 net-tools dnsutils iputils-ping tracer
 RUN apt-get --yes install make git geany
 # Installazione strumenti ssh
 RUN apt-get --yes install openssh-client openssh-server
+# Installazione firefox (no snapd)
+RUN apt-get --yes install software-properties-common
+RUN add-apt-repository ppa:mozillateam/ppa
+COPY etc/apt/preferences.d/mozilla-firefox /etc/apt/preferences.d/mozilla-firefox
+RUN apt-get --yes install firefox
 
 ### Cleanup (moved)
 RUN apt-get autoclean -y \
@@ -50,6 +55,10 @@ COPY entrypoint.sh /opt/
 COPY config/pcmanfm /home/$username/.config/pcmanfm
 COPY vnc/xstartup /home/$username/.vnc/
 COPY wallpaper.jpg /usr/share/lxde/wallpapers/
+
+COPY home/user/.config/lxterminal/lxterminal.conf /home/user/.config/lxterminal/lxterminal.conf
+RUN chmod user:user /home/user/.config/lxterminal/lxterminal.conf
+
 
 RUN chown --recursive $username:$username /home/$username
 

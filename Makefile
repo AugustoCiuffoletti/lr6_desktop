@@ -16,12 +16,11 @@ multiarch:
 # push an image on dockerhub
 push:
 	ARCH=$(ARCH) make build
-	docker tag $(IMAGE):$(ARCH)-$(TAG) $(OWNER)/$(IMAGE):$(ARCH)-$(TAG)
 	docker push $(OWNER)/$(IMAGE):$(ARCH)-$(TAG)
 # build a loval image
 build:
 	cp Dockerfile Dockerfile.$(ARCH)
-	docker buildx build --load --platform linux/$(ARCH) -t $(IMAGE):$(ARCH)-$(TAG) -f Dockerfile.$(ARCH) .
+	docker buildx build --load --platform linux/$(ARCH) -t $(OWNER)/$(IMAGE):$(ARCH)-$(TAG) -f Dockerfile.$(ARCH) .
 # test run
 run: 
 	docker run \

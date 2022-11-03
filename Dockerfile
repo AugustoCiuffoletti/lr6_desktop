@@ -28,6 +28,8 @@ RUN apt-get --yes install software-properties-common
 RUN add-apt-repository ppa:mozillateam/ppa
 COPY etc/apt/preferences.d/mozilla-firefox /etc/apt/preferences.d/mozilla-firefox
 RUN apt-get --yes install firefox
+# Installazione dhclient per analisi protocollo
+RUN apt-get --yes install isc-dhcp-client
 
 ### Cleanup
 RUN apt-get autoclean -y \

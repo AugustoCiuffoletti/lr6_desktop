@@ -2,6 +2,8 @@
 VNCPASSWD="user"
 USER="user"
 
+chown --recursive ${USER}:${USER} /home/${USER}
+
 echo "* enable Wireshark capture from user $USER"
 groupadd -r wireshark
 usermod -a -G wireshark $USER

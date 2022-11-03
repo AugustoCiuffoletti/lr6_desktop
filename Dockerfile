@@ -56,7 +56,5 @@ COPY wallpaper.jpg /usr/share/lxde/wallpapers/
 
 COPY home/user/.config/lxterminal/lxterminal.conf /home/$username/.config/lxterminal/lxterminal.conf
 
-RUN chown --recursive $username:$username /home/$username
-
 CMD /opt/entrypoint.sh
 

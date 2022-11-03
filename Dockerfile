@@ -9,8 +9,9 @@ RUN apt-get --yes install lxde
 RUN apt-get remove -y deluge-common lxmusic smplayer mpv pulseaudio pulseaudio-utils evince tcl tcl8.6 pavucontrol tilix firefox usermode xscreensaver
 # Installazione server VNC
 RUN apt-get --yes install tigervnc-standalone-server
-# Installazione proxy VNC
+# Installazione proxy VNC and default to vnc (not vnc_lite)
 RUN apt-get --yes install novnc python3-websockify python3-numpy
+RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html
 RUN apt-get --yes install autocutsel     # Serve a collegare le clipboard novnc
 
 
@@ -28,7 +29,7 @@ RUN add-apt-repository ppa:mozillateam/ppa
 COPY etc/apt/preferences.d/mozilla-firefox /etc/apt/preferences.d/mozilla-firefox
 RUN apt-get --yes install firefox
 
-### Cleanup (moved)
+### Cleanup
 RUN apt-get autoclean -y \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/* \
@@ -40,10 +41,10 @@ ARG password="user"
 RUN useradd \
 	--create-home \
 	--shell /bin/bash \
-	--user-group \
 	--groups adm,sudo \
 	--password "$(openssl passwd -1 $password)"\
 	$username
+RUN mkdir /home/$username/.ssh
 	
 RUN mv /usr/bin/lxpolkit /usr/bin/lxpolkit.ORIG
 RUN echo "desktop" > /etc/hostname
@@ -53,9 +54,7 @@ COPY config/pcmanfm /home/$username/.config/pcmanfm
 COPY vnc/xstartup /home/$username/.vnc/
 COPY wallpaper.jpg /usr/share/lxde/wallpapers/
 
-COPY home/user/.config/lxterminal/lxterminal.conf /home/user/.config/lxterminal/lxterminal.conf
-RUN chown user:user /home/user/.config/lxterminal/lxterminal.conf
-
+COPY home/user/.config/lxterminal/lxterminal.conf /home/$username/.config/lxterminal/lxterminal.conf
 
 RUN chown --recursive $username:$username /home/$username
 

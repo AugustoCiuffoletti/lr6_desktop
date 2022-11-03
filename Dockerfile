@@ -2,20 +2,17 @@ FROM ubuntu:jammy-20221020 as system
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates \
-    && apt-get autoclean -y \
-    && apt-get autoremove -y
-
-RUN apt-get install -y lxde
-RUN apt-get install -y tigervnc-standalone-server
-RUN apt-get install -y novnc python3-websockify python3-numpy
-RUN apt-get install -y sudo
-RUN apt-get install -y autocutsel     # Serve a collegare le clipboard
-
-# rimozione app inutili
+RUN apt-get update
+RUN apt-get --yes install sudo ca-certificates
+RUN apt-get --yes install lxde
+# rimozione app lxde inutili
 RUN apt-get remove -y deluge-common lxmusic smplayer mpv pulseaudio pulseaudio-utils evince tcl tcl8.6 pavucontrol tilix firefox usermode xscreensaver
-RUN apt-get -y autoremove
+# Installazione server VNC
+RUN apt-get --yes install tigervnc-standalone-server
+# Installazione proxy VNC
+RUN apt-get --yes install novnc python3-websockify python3-numpy
+RUN apt-get --yes install autocutsel     # Serve a collegare le clipboard novnc
+
 
 # Installazione package generazione e cattura di pacchetti
 RUN apt-get --yes install wireshark packeth
@@ -57,7 +54,7 @@ COPY vnc/xstartup /home/$username/.vnc/
 COPY wallpaper.jpg /usr/share/lxde/wallpapers/
 
 COPY home/user/.config/lxterminal/lxterminal.conf /home/user/.config/lxterminal/lxterminal.conf
-RUN chmod user:user /home/user/.config/lxterminal/lxterminal.conf
+RUN chown user:user /home/user/.config/lxterminal/lxterminal.conf
 
 
 RUN chown --recursive $username:$username /home/$username

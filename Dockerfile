@@ -18,7 +18,7 @@ RUN apt-get --yes install autocutsel     # Serve a collegare le clipboard novnc
 # Installazione package generazione e cattura di pacchetti
 RUN apt-get --yes install wireshark packeth
 # Installazione strumenti di rete
-RUN apt-get --yes install netcat iproute2 net-tools dnsutils iputils-ping traceroute nmap
+RUN apt-get --yes install netcat iproute2 net-tools dnsutils iputils-ping traceroute nmap curl
 # Installazione strumenti di sviluppo
 RUN apt-get --yes install make git geany
 # Installazione strumenti ssh
@@ -50,6 +50,8 @@ RUN mkdir /home/$username/.ssh
 	
 RUN mv /usr/bin/lxpolkit /usr/bin/lxpolkit.ORIG
 RUN echo "desktop" > /etc/hostname
+# Enable sudo PackETH
+RUN echo "xhost SI:localuser:root" >> /home/$username/.bash 
 
 COPY entrypoint.sh /opt/
 COPY config/pcmanfm /home/$username/.config/pcmanfm

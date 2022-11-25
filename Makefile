@@ -17,7 +17,7 @@ multiarch:
 push:
 	ARCH=$(ARCH) make build
 	docker push $(OWNER)/$(IMAGE):$(ARCH)-$(TAG)
-# build a loval image
+# build image
 build:
 	cp Dockerfile Dockerfile.$(ARCH)
 	docker buildx build --load --platform linux/$(ARCH) -t $(OWNER)/$(IMAGE):$(ARCH)-$(TAG) -f Dockerfile.$(ARCH) .
